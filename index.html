@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InnovaPrint</title>
+
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --white: #ffffff;
+      --dark: #0f172a;
+      --dark-2: #020617;
+      --blue: #2563eb;
+      --blue-dark: #1d4ed8;
+      --blue-soft: #38bdf8;
+      --text: #334155;
+      --muted: #64748b;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      --radius: 18px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--dark);
+    }
+
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; }
+    ul { list-style: none; }
+
+    #portal { display: none; }
+
+    /* ── REGISTRO ── */
+    #registro {
+      position: fixed;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .registro-card {
+      background: var(--white);
+      padding: 40px;
+      border-radius: 20px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+    }
+
+    /* Logo SVG generado - reemplaza log.jpeg */
+    .logo-registro-svg {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 15px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #2563eb, #0f172a);
+      font-size: 32px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -2px;
+    }
+
+    .registro-card h2 { margin-bottom: 20px; }
+
+    .registro-card input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      outline: none;
+    }
+
+    .registro-card button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 12px;
+      background: var(--blue);
+      color: var(--white);
+      font-weight: bold;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .registro-card button:hover {
+      transform: translateY(-3px);
+      background: var(--blue-dark);
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      color: var(--white);
+      padding: 18px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+      z-index: 1000;
+    }
+
+    .brand { font-size: 28px; font-weight: 700; }
+
+    nav { display: flex; flex-wrap: wrap; gap: 18px; }
+
+    nav a {
+      color: var(--white);
+      font-weight: bold;
+      position: relative;
+      transition: .3s;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 0;
+      height: 2px;
+      background: var(--blue-soft);
+      transition: .3s;
+    }
+
+    nav a:hover { color: var(--blue-soft); }
+    nav a:hover::after { width: 100%; }
+
+    /* ── HERO ── */
+    .hero, .page-hero, .contact {
+      background: linear-gradient(120deg, #2563eb, #1e40af, #0f172a);
+      background-size: 300% 300%;
+      animation: fondo 10s ease infinite;
+      color: var(--white);
+      text-align: center;
+      padding: 90px 20px;
+    }
+
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero h1, .page-hero h1, .contact h1 {
+      font-size: 56px;
+      margin-bottom: 15px;
+      text-shadow: 0 8px 25px rgba(0,0,0,.35);
+    }
+
+    .hero p, .page-hero p, .contact .sub {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 18px;
+      opacity: .95;
+    }
+
+    @keyframes fondo {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ── MOVING SECTION ── */
+    .section-title {
+      text-align: center;
+      font-size: 36px;
+      margin-bottom: 15px;
+      color: var(--dark);
+    }
+
+    .moving-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 80px 60px;
+      gap: 40px;
+      background: var(--white);
+      flex-wrap: wrap;
+    }
+
+    .moving-left, .moving-right { flex: 1; min-width: 320px; }
+
+    .moving-left {
+      overflow: hidden;
+      border-radius: 20px;
+      background: var(--dark);
+      padding: 30px;
+    }
+
+    .moving-wrapper { height: 60px; overflow: hidden; position: relative; }
+
+    .moving-text {
+      display: inline-flex;
+      gap: 60px;
+      white-space: nowrap;
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--blue-soft);
+      animation: mover 18s linear infinite;
+    }
+
+    .moving-text:hover { animation-play-state: paused; }
+
+    @keyframes mover {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .moving-right h2 { font-size: 34px; margin-bottom: 20px; color: var(--dark); }
+    .moving-right p  { font-size: 18px; margin-bottom: 20px; color: var(--text); }
+    .moving-right li { margin-bottom: 10px; font-size: 17px; color: #1e293b; }
+
+    /* ── SERVICES ── */
+    .services { padding: 80px 20px; }
+
+    .cards {
+      max-width: 1150px;
+      margin: 40px auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: var(--white);
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: .3s;
+    }
+
+    .card:hover { transform: translateY(-10px) scale(1.02); }
+
+    .icon { font-size: 40px; margin-bottom: 15px; }
+    .card h3 { margin-bottom: 10px; }
+    .card p { font-size: 14px; color: #666; line-height: 1.6; }
+
+    /* ── CATALOGO ── */
+    .catalogo-section {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .catalogo-section h1 { font-size: 48px; color: var(--dark); }
+    .catalogo-section p  { margin-top: 10px; color: #475569; }
+
+    .catalogo {
+      max-width: 1200px;
+      margin: 50px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .producto {
+      background: var(--white);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: .3s;
+    }
+
+    .producto:hover { transform: translateY(-10px) scale(1.03); }
+
+    .producto img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .nombre { margin-top: 15px; font-size: 18px; color: var(--dark); font-weight: 700; }
+    .precio { margin-top: 8px; color: var(--blue); font-weight: bold; font-size: 18px; }
+
+    .btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 10px;
+      background: var(--blue);
+      color: var(--white);
+      cursor: pointer;
+      transition: .3s;
+      font-weight: bold;
+    }
+
+    .btn:hover { background: var(--blue-dark); }
+
+    /* ── ABOUT ── */
+    .about-content {
+      display: flex;
+      gap: 40px;
+      padding: 80px 60px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .about-text { max-width: 520px; }
+    .about-text h2 { margin-bottom: 20px; font-size: 32px; }
+    .about-text p  { margin-bottom: 15px; line-height: 1.8; color: var(--text); }
+
+    .about-box {
+      background: var(--white);
+      padding: 35px;
+      border-radius: var(--radius);
+      width: 320px;
+      box-shadow: var(--shadow);
+    }
+
+    .about-box h3 { margin-bottom: 15px; }
+    .about-box li { margin-bottom: 12px; color: var(--text); }
+
+    .mission {
+      padding: 0 20px 80px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    /* ── CONTACT ── */
+    .contact { padding: 90px 20px; }
+    .sub { margin-bottom: 50px !important; }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+
+    .info {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      padding: 35px;
+      border-radius: var(--radius);
+      width: 320px;
+      text-align: left;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .info h3 { margin-bottom: 20px; }
+    .info p  { margin-bottom: 12px; line-height: 1.6; }
+
+    .social { margin-top: 20px; }
+    .social span { display: block; margin-bottom: 10px; font-weight: bold; }
+    .social a { display: block; color: var(--blue-soft); margin-top: 6px; font-weight: bold; }
+
+    .form {
+      background: var(--white);
+      color: #000;
+      padding: 35px;
+      border-radius: var(--radius);
+      width: 340px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      text-align: left;
+    }
+
+    .form h3 { margin-bottom: 20px; }
+
+    .form input, .form textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      outline: none;
+    }
+
+    .form textarea { height: 120px; resize: none; }
+
+    .form button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--blue);
+      color: var(--white);
+      font-weight: bold;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .form button:hover {
+      background: var(--blue-dark);
+      transform: translateY(-3px);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark-2);
+      color: var(--white);
+      text-align: center;
+      padding: 32px 20px;
+      font-size: 15px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 992px) {
+      header { padding: 18px 24px; }
+
+      .hero h1, .page-hero h1, .contact h1 { font-size: 42px; }
+
+      .catalogo { grid-template-columns: repeat(2, 1fr); }
+
+      .moving-section, .about-content { padding: 60px 24px; }
+    }
+
+    @media (max-width: 768px) {
+      header { flex-direction: column; align-items: flex-start; }
+      nav { gap: 14px; }
+
+      .hero, .page-hero, .contact, .catalogo-section { padding: 70px 20px; }
+
+      .hero h1, .page-hero h1, .catalogo-section h1, .contact h1 { font-size: 34px; }
+
+      .moving-text { font-size: 20px; gap: 30px; }
+      .moving-right h2 { font-size: 28px; }
+
+      .catalogo { grid-template-columns: 1fr; }
+
+      .registro-card, .form, .info { width: 100%; max-width: 360px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANTALLA DE REGISTRO -->
+  <div id="registro">
+    <div class="registro-card">
+      <!-- Logo SVG inline - no depende de archivo externo -->
+      <div class="logo-registro-svg">IP</div>
+      <h2>Crear cuenta</h2>
+      <input type="text" id="usuario" placeholder="Usuario">
+      <input type="password" id="clave" placeholder="Contrasena">
+      <button onclick="registrar()">REGISTRAR</button>
+    </div>
+  </div>
+
+  <!-- PORTAL PRINCIPAL -->
+  <div id="portal">
+    <header>
+      <h2 class="brand">InnovaPrint</h2>
+      <nav>
+        <a href="#inicio">Inicio</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#catalogo">Catalogo</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#contacto">Contacto</a>
+        <a href="#" onclick="cerrarSesion()">Salir</a>
+      </nav>
+    </header>
+
+    <main>
+
+      <!-- HERO -->
+      <section class="hero" id="inicio">
+        <h1>InnovaPrint</h1>
+        <p>
+          Transformamos tus ideas en productos personalizados de alta calidad
+          con disenos unicos y tecnologia de impresion profesional.
+        </p>
+      </section>
+
+      <!-- MOVING -->
+      <section class="moving-section">
+        <div class="moving-left">
+          <div class="moving-wrapper">
+            <div class="moving-text">
+              <span>Diseno de Logos</span>
+              <span>Ropa Personalizada</span>
+              <span>Impresion Publicitaria</span>
+              <span>Articulos Promocionales</span>
+              <span>Packaging Creativo</span>
+              <span>Diseno de Logos</span>
+              <span>Ropa Personalizada</span>
+              <span>Impresion Publicitaria</span>
+              <span>Articulos Promocionales</span>
+              <span>Packaging Creativo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="moving-right">
+          <h2>Como te ayudamos?</h2>
+          <p>
+            En InnovaPrint convertimos tus ideas en productos reales.
+            Disenamos, imprimimos y entregamos con calidad profesional
+            para que tu marca destaque.
+          </p>
+          <ul>
+            <li>Disenos exclusivos</li>
+            <li>Materiales premium</li>
+            <li>Entrega rapida</li>
+            <li>Atencion personalizada</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- SERVICIOS -->
+      <section class="services" id="servicios">
+        <h2 class="section-title">Nuestros Servicios</h2>
+        <div class="cards">
+          <div class="card">
+            <div class="icon">&#128161;</div>
+            <h3>Ideacion y Estructura</h3>
+            <p>Aterrizamos tu idea y creamos una base solida para tu negocio.</p>
+          </div>
+          <div class="card">
+            <div class="icon">&#127919;</div>
+            <h3>Branding e Identidad</h3>
+            <p>Disenamos una imagen profesional que destaque tu marca.</p>
+          </div>
+          <div class="card">
+            <div class="icon">&#128202;</div>
+            <h3>Planificacion Financiera</h3>
+            <p>Estrategias para asegurar estabilidad y crecimiento.</p>
+          </div>
+          <div class="card">
+            <div class="icon">&#128241;</div>
+            <h3>Marketing Digital</h3>
+            <p>Campanas que atraen clientes y hacen crecer tu negocio.</p>
+          </div>
+          <div class="card">
+            <div class="icon">&#9878;</div>
+            <h3>Asesoria Legal</h3>
+            <p>Te ayudamos con todos los procesos legales.</p>
+          </div>
+          <div class="card">
+            <div class="icon">&#129309;</div>
+            <h3>Mentoria Continua</h3>
+            <p>Acompanamiento constante para escalar tu negocio.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CATALOGO -->
+      <section class="catalogo-section" id="catalogo">
+        <h1>Catalogo</h1>
+        <p>Productos personalizados con calidad profesional.</p>
+
+        <div class="catalogo">
+          <div class="producto">
+            <img src="https://i.postimg.cc/66PnYWQz/Whats-App-Image-2026-03-27-at-8-23-26-PM.jpg" alt="Aretes personalizados">
+            <div class="nombre">Aretes</div>
+            <div class="precio">$20</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+          <div class="producto">
+            <img src="https://i.postimg.cc/K82NDG9f/Whats-App-Image-2026-03-27-at-8-23-25-PM.jpg" alt="Sudaderas personalizadas">
+            <div class="nombre">Sudaderas</div>
+            <div class="precio">$15</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+          <div class="producto">
+            <img src="https://i.postimg.cc/XqS1CwtB/Whats-App-Image-2026-04-02-at-12-36-39-PM.jpg" alt="Gorra bordada">
+            <div class="nombre">Gorra Bordada</div>
+            <div class="precio">$18</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+          <div class="producto">
+            <img src="https://i.postimg.cc/Nj9Gst87/Gemini-Generated-Image-yez8jpyez8jpyez8.png" alt="Poloches personalizados">
+            <div class="nombre">Poloches</div>
+            <div class="precio">$10</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+          <div class="producto">
+            <img src="https://i.postimg.cc/GpR5tJwC/Gemini-Generated-Image-9jy5kh9jy5kh9jy5.png" alt="Camiseta blanca personalizada">
+            <div class="nombre">Camiseta blanca</div>
+            <div class="precio">$30</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+          <div class="producto">
+            <img src="https://i.postimg.cc/HLgqq161/Gemini-Generated-Image-mpzo39mpzo39mpzo.png" alt="Conjunto de accesorios">
+            <div class="nombre">Conjunto de accesorios</div>
+            <div class="precio">$25</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+          <div class="producto">
+            <img src="https://i.postimg.cc/MH3xw3vV/Gemini-Generated-Image-5z7ghk5z7ghk5z7g.png" alt="Pantalones personalizados">
+            <div class="nombre">Pantalones</div>
+            <div class="precio">$40</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+          <div class="producto">
+            <img src="https://i.postimg.cc/J4b30w17/Whats-App-Image-2026-03-27-at-8-23-25-PM-(1).jpg" alt="Cadena personalizada">
+            <div class="nombre">Cadena</div>
+            <div class="precio">$22</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+          <div class="producto">
+            <img src="https://i.postimg.cc/fWdqcrwP/Gemini-Generated-Image-cv8moicv8moicv8m.png" alt="Llavero personalizado">
+            <div class="nombre">Llavero Personalizado</div>
+            <div class="precio">$8</div>
+            <a class="btn" href="#contacto">Comprar</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- NOSOTROS -->
+      <section class="page-hero" id="nosotros">
+        <h1>Sobre Nosotros</h1>
+        <p>Conoce quienes somos y por que InnovaPrint es tu mejor aliado creativo.</p>
+      </section>
+
+      <section class="about-content">
+        <div class="about-text">
+          <h2>Nuestra Historia</h2>
+          <p>
+            InnovaPrint nace con el objetivo de ayudar a negocios y emprendedores
+            a destacar mediante soluciones creativas de diseno e impresion.
+            Combinamos tecnologia, creatividad y materiales de alta calidad
+            para ofrecer productos personalizados unicos.
+          </p>
+          <p>
+            Nuestro equipo trabaja con pasion en cada proyecto, cuidando cada detalle
+            desde la idea inicial hasta el producto final.
+          </p>
+        </div>
+
+        <div class="about-box">
+          <h3>Por que elegirnos?</h3>
+          <ul>
+            <li>&#10004; Disenos exclusivos y profesionales</li>
+            <li>&#10004; Materiales de alta calidad</li>
+            <li>&#10004; Atencion personalizada</li>
+            <li>&#10004; Entrega rapida y segura</li>
+            <li>&#10004; Compromiso con la satisfaccion del cliente</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="mission">
+        <div class="card">
+          <h3>Mision</h3>
+          <p>Brindar soluciones de impresion y diseno que impulsen la identidad y el crecimiento de nuestros clientes.</p>
+        </div>
+        <div class="card">
+          <h3>Vision</h3>
+          <p>Convertirnos en una empresa lider en servicios creativos y de impresion a nivel nacional.</p>
+        </div>
+        <div class="card">
+          <h3>Valores</h3>
+          <p>Calidad, responsabilidad, innovacion y compromiso con cada proyecto.</p>
+        </div>
+      </section>
+
+      <!-- CONTACTO -->
+      <section class="contact" id="contacto">
+        <h1>Contactanos</h1>
+        <p class="sub">Tienes una idea o proyecto? Escribenos y lo hacemos realidad.</p>
+
+        <div class="container">
+          <div class="info">
+            <h3>Informacion</h3>
+            <p>&#128222; +1 809 000 0000</p>
+            <p>&#128231; contacto@innovaprint.com</p>
+            <p>&#128205; Santo Domingo, Republica Dominicana</p>
+            <p>&#128336; Lun - Sab | 8:00 AM - 6:00 PM</p>
+            <div class="social">
+              <span>Siguenos:</span>
+              <a href="#">Instagram</a>
+              <a href="#">Facebook</a>
+              <a href="#">WhatsApp</a>
+            </div>
+          </div>
+
+          <div class="form">
+            <h3>Envianos un mensaje</h3>
+            <form action="https://formsubmit.co/marvinhernandez0828@gmail.com" method="POST">
+              <input type="text" name="nombre" placeholder="Nombre" required>
+              <input type="email" name="correo" placeholder="Correo electronico" required>
+              <textarea name="mensaje" placeholder="Escribe tu mensaje" required></textarea>
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_subject" value="Nuevo mensaje desde InnovaPrint">
+              <button type="submit">ENVIAR MENSAJE</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      &copy; 2026 InnovaPrint &mdash; Todos los derechos reservados
+    </footer>
+  </div>
+
+  <script>
+    window.onload = function () {
+      if (localStorage.getItem("usuario")) {
+        mostrarPortal();
+      }
+    };
+
+    function registrar() {
+      var usuario = document.getElementById("usuario").value.trim();
+      var clave   = document.getElementById("clave").value.trim();
+
+      if (usuario && clave) {
+        localStorage.setItem("usuario", usuario);
+        mostrarPortal();
+      } else {
+        alert("Completa los campos");
+      }
+    }
+
+    function mostrarPortal() {
+      document.getElementById("registro").style.display = "none";
+      document.getElementById("portal").style.display  = "block";
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem("usuario");
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>
